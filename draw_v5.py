@@ -98,6 +98,14 @@ def main():
     # tail overlapped the hand by ~5px. Top margins were 87-95px, so +30px
     # up leaves a ~25px clear gap to the hand and still ~57-65px to the
     # board's top edge. Font size and rotation unchanged.
+    # v5.4: text shifted LEFT 15px (paste centre x 475 -> 460), y unchanged.
+    # Measured on v5.3 (white glyphs vs bronze frame inner edge, per row):
+    # "4,811 DAYS" right margin was ~0px — the "S" white pixels reached the
+    # right frame line (stroke overlapped it ~2-4px) — while its left margin
+    # was ~34px (line 1: L ~48 / R ~17-23). A 15px left shift centres the
+    # dominant line (L ~19 / R ~15-17 white) and keeps a clear black gap
+    # from the frame on BOTH sides; 20px would have left only ~6px on the
+    # left. Top/bottom margins unchanged (top ~54px, hand gap ~25px).
     layer = Image.new("RGBA", (420, 180), (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
     f1, f2 = font(68), font(68)
@@ -110,9 +118,9 @@ def main():
         y += ff.size + 14
     layer = layer.resize((378, 180), Image.LANCZOS)  # 0.9x horizontal squeeze
     rot = layer.rotate(15, expand=True, resample=Image.BICUBIC)
-    im.paste(rot, (475 - rot.width // 2, 275 - rot.height // 2), rot)
+    im.paste(rot, (460 - rot.width // 2, 275 - rot.height // 2), rot)
     print("board fonts:", f1.size, f2.size, "rotated layer:", rot.size,
-          "paste centre y: 275 (v5.3, +30px up)")
+          "paste centre: (460, 275) — v5.4, -15px left, y unchanged")
 
     # ---- 3. Dog's cardboard: "DELAYED" / "AGAIN..." (English only).
     # True cardboard quad measured from v5-base.png (tan ~(170,108,69)
