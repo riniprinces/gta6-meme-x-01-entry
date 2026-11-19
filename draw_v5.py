@@ -93,6 +93,11 @@ def main():
     # Measured board quad: a parallelogram tilted ~15 deg CCW, face centre
     # ~(475, 305), top-edge length ~360. Text block condensed 0.9x so the
     # wide line fits with real margins, rotated +15 to sit on the board.
+    # v5.3: text moved UP 30px (paste centre y 305 -> 275). Measured on
+    # v5.2: text bottom y=414 vs hand top y=409 at x~295 — the "4," comma
+    # tail overlapped the hand by ~5px. Top margins were 87-95px, so +30px
+    # up leaves a ~25px clear gap to the hand and still ~57-65px to the
+    # board's top edge. Font size and rotation unchanged.
     layer = Image.new("RGBA", (420, 180), (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
     f1, f2 = font(68), font(68)
@@ -105,8 +110,9 @@ def main():
         y += ff.size + 14
     layer = layer.resize((378, 180), Image.LANCZOS)  # 0.9x horizontal squeeze
     rot = layer.rotate(15, expand=True, resample=Image.BICUBIC)
-    im.paste(rot, (475 - rot.width // 2, 305 - rot.height // 2), rot)
-    print("board fonts:", f1.size, f2.size, "rotated layer:", rot.size)
+    im.paste(rot, (475 - rot.width // 2, 275 - rot.height // 2), rot)
+    print("board fonts:", f1.size, f2.size, "rotated layer:", rot.size,
+          "paste centre y: 275 (v5.3, +30px up)")
 
     # ---- 3. Dog's cardboard: "DELAYED" / "AGAIN..." (English only).
     # True cardboard quad measured from v5-base.png (tan ~(170,108,69)
