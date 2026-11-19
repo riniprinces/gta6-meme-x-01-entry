@@ -63,24 +63,28 @@ def main():
     # ---- 0. Official make.fun logo badge, top-left (mark is the real press
     # kit mark: white ghost on a magenta disc with a black ring). White
     # circular backing + soft shadow so it pops against the sunset palms.
+    # v5.2: badge enlarged to Ø170 (was Ø124) — clearly bigger, still fits
+    # the corner cleanly; title shifted right so nothing collides.
     mark = Image.open(MARK).convert("RGBA")
-    bcx, bcy, br = 80, 76, 62
+    bcx, bcy, br = 96, 92, 85
     d.ellipse([bcx - br - 5, bcy - br - 2, bcx + br + 5, bcy + br + 8],
               fill=(20, 12, 25))
     d.ellipse([bcx - br, bcy - br, bcx + br, bcy + br],
               fill=WHITE, outline=(30, 20, 40), width=4)
-    m = mark.resize((112, 112), Image.LANCZOS)
-    im.paste(m, (bcx - 56, bcy - 56), m)
-    print("logo badge: centre", (bcx, bcy), "radius", br)
+    m = mark.resize((150, 150), Image.LANCZOS)
+    im.paste(m, (bcx - 75, bcy - 75), m)
+    print("logo badge: centre", (bcx, bcy), "radius", br, "diameter", br * 2)
 
     # ---- 1. Top title, one clean line after the badge. Bigger (70), thick
-    # outline, drop shadow, vivid yellow on "GTA...".
+    # outline, drop shadow, vivid yellow on "GTA...". v5.2: shifted right to
+    # x=200 so the enlarged Ø170 badge clears it (title ends ~1294, still
+    # clear of the helicopter).
     title_a = "13 YEARS STILL PLAYING "
     title_b = "GTA..."
     f = font(70)
     w_a = d.textlength(title_a, font=f)
     w_b = d.textlength(title_b, font=f)
-    tx, ty = 160, 12
+    tx, ty = 200, 12
     print("title width:", round(w_a + w_b), "ends at x:", round(tx + w_a + w_b))
     shadowed(d, (tx, ty), title_a, f, WHITE, stroke=7)
     shadowed(d, (tx + w_a, ty), title_b, f, YELLOW, stroke=7)
@@ -105,10 +109,12 @@ def main():
     print("board fonts:", f1.size, f2.size, "rotated layer:", rot.size)
 
     # ---- 3. Dog's cardboard: "DELAYED" / "AGAIN..." (English only).
-    # Measured cardboard quad: x ~1440-1735, y ~870-1045, centre ~(1590, 957).
-    # Old text was centred 90px too far left and wider than the board.
-    # Condensed 0.85x so 68px type fits with real margins; dark text with a
-    # subtle light outline for contrast on the tan cardboard.
+    # True cardboard quad measured from v5-base.png (tan ~(170,108,69)
+    # profile): x 1468-1740, y 876-1044, centre (1604, 960). Old paste
+    # centre x=1590 put the 271px-wide 68px text 14px too far left — the
+    # "D" overflowed the left edge by ~14px. KOREKSI user: font TETAP 68,
+    # hanya geser +14px ke kanan ke centre sebenarnya (1604) supaya margin
+    # kiri-kanan seimbang. Dark text with a subtle light outline.
     clay = Image.new("RGBA", (400, 150), (0, 0, 0, 0))
     cd = ImageDraw.Draw(clay)
     f3 = font(68)
@@ -119,8 +125,9 @@ def main():
                 stroke_width=2, stroke_fill=CARD_OUTLINE)
         y += f3.size + 6
     clay = clay.resize((340, 150), Image.LANCZOS)  # 0.85x horizontal squeeze
-    im.paste(clay, (1590 - clay.width // 2, 957 - clay.height // 2), clay)
-    print("cardboard font:", f3.size, "squeezed width:", clay.width)
+    im.paste(clay, (1604 - clay.width // 2, 957 - clay.height // 2), clay)
+    print("cardboard font:", f3.size, "squeezed width:", clay.width,
+          "paste centre x: 1604")
 
     # ---- 4. Desk calendar: "SICK DAY" / "26 MAY" with red circle.
     # Measured page centre x ~335 (old code used 280 — too far left).
